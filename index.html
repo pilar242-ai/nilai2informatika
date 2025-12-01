@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pencarian Data Siswa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 25px;
+      background-color: #f4f4f4;
+    }
+    h2 {
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 900px;
+      margin: auto;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #009879;
+      color: white;
+    }
+    tr:nth-child(even) {background-color: #f2f2f2;}
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🔍 Cek Status Tugas Siswa</h2>
+
+  <label>Nama:</label>
+  <input type="text" id="namaInput" placeholder="Contoh: Retno">
+
+
+  <button onclick="searchData()">Cari</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+  async function searchData() {
+    const nama = document.getElementById("namaInput").value;
+    //const kelas = document.getElementById("kelasInput").value;
+
+    // 🔗 Ganti URL Web App ini dengan URL Google Apps Script kamu
+    const url = `https://script.google.com/macros/s/AKfycbwz408CDuCgkH9hF_CFYvWegiYgGKr_E8exq6WAwQFtqj2qYaABCc8XoXKEfqqAGTIT/exec?nama=${nama}`;
+
+    document.getElementById("result").innerHTML = "⏳ Sedang mencari data...";
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.error || data.message) {
+        document.getElementById("result").innerHTML = `<p class="error">${data.error || data.message}</p>`;
+        return;
+      }
+
+      let table = `
+        <table>
+          <tr>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>Analisis AI</th>
+            <th>Estimasi Solar</th>
+            <th>Laporan Progress</th>
+            <th>Tugas Olah Data</th>
+            <th>CV</th>
+            <th>Data Solar</th>
+            <th>Canva</th>
+            <th>Mid Test</th>
+          </tr>
+      `;
+
+      data.forEach(item => {
+        table += `
+          <tr>
+            <td>${item.nama}</td>
+            <td>${item.kelas}</td>
+            <td>${item.status_analisis_spesifikasi_dengan_AI}</td>
+            <td>${item.status_pencarian_estimasi_pemakaian_solar}</td>
+            <td>${item.status_sumatif_laporan_progress}</td>
+            <td>${item.status_tugas_lanjutan_olah_data_solar}</td>
+            <td>${item.status_membuat_cv}</td>
+            <td>${item.status_tugas_lanjutan_data_solar}</td>
+            <td>${item.status_canva}</td>
+            <td>${item.status_mid_test}</td>
+          </tr>
+        `;
+      });
+
+      table += "</table>";
+      document.getElementById("result").innerHTML = table;
+
+    } catch (error) {
+      document.getElementById("result").innerHTML = `<p class="error">❌ Gagal mengambil data. Periksa URL API Anda.</p>`;
+    }
+  }
+</script>
+
+</body>
+</html>
